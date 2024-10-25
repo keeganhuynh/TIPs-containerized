@@ -56,6 +56,9 @@ source ~/.bashrc
 ```python
 python   TIPs.py   folder_to_be_processed
 ```
+
+# Training
+The training code and data will be made available following the acceptance of the paper. Thank you!
 # Paper
 
 ```
