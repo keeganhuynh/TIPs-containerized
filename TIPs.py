@@ -8,6 +8,10 @@ import argparse
 import nibabel as nib
 import shutil
 
+os.environ["nnUNet_raw"] = "nnUNet_raw"
+os.environ["nnUNet_preprocessed"] = "nnUNet_preprocessed"
+os.environ["nnUNet_results"] = "nnResults"
+
 parser = argparse.ArgumentParser(description='Process files in a folder and calculate centroid.')
 
 # Add argument for the folder path
