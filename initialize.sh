@@ -43,8 +43,7 @@ rm -f "${DOWNLOAD_PATH}"
 
 # ─── Step 4: Install model into destination ───────────────────────────────────
 echo "[4/4] Installing model to ${DEST_DIR}..."
-mkdir -p "${DEST_DIR}"
-cp -r "${UNZIP_DIR}"/. "${DEST_DIR}/"
+mv "${UNZIP_DIR}/nnResults" "${DEST_DIR}"
 rm -rf "${UNZIP_DIR}"
 
 echo "Done. Model files are ready at ${DEST_DIR}."
