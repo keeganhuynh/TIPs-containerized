@@ -5,8 +5,14 @@ set -e
 GDRIVE_FILE_ID="1UuFgZ-kwRryPC-vK7w64xX0VO4iOAeGt"
 DOWNLOAD_PATH="/tmp/nnResults.zip"
 UNZIP_DIR="/tmp/nnResults_unzipped"
-DEST_DIR="/workspace/TIPs/nnResults"
+DEST_DIR="/TIPs/nnResults"
 MIN_FILE_SIZE=100000   # bytes
+
+# ─── Skip download if model already exists ────────────────────────────────────
+if [ -d "${DEST_DIR}" ] && [ "$(ls -A "${DEST_DIR}" 2>/dev/null)" ]; then
+    echo "Model already exists at ${DEST_DIR}, skipping download."
+    exec "$@"
+fi
 
 # ─── Step 1: Install gdown if not already available ───────────────────────────
 echo "[1/4] Installing gdown..."
@@ -16,8 +22,12 @@ pip install --quiet gdown
 echo "[2/4] Downloading model archive..."
 gdown "${GDRIVE_FILE_ID}" -O "${DOWNLOAD_PATH}"
 
-# Verify file size
-ACTUAL_SIZE=$(stat -c%s "${DOWNLOAD_PATH}" 2>/dev/null || stat -f%z "${DOWNLOAD_PATH}")
+# Verify file size (Linux: -c%s, macOS: -f%z)
+if stat -c%s "${DOWNLOAD_PATH}" >/dev/null 2>&1; then
+    ACTUAL_SIZE=$(stat -c%s "${DOWNLOAD_PATH}")
+else
+    ACTUAL_SIZE=$(stat -f%z "${DOWNLOAD_PATH}")
+fi
 if [ "${ACTUAL_SIZE}" -le "${MIN_FILE_SIZE}" ]; then
     echo "ERROR: Download failed or file too small (${ACTUAL_SIZE} bytes)."
     rm -f "${DOWNLOAD_PATH}"
